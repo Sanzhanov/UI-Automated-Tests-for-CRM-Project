@@ -1,5 +1,4 @@
 import LoginPage from "../pages/login.page";
-import AppPage from "../pages/app/app.page";
 import MainPage from "../pages/app/main.page";
 
 describe('User log in', () => {

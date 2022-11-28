@@ -8,6 +8,8 @@ class LoginPage extends BasePage {
     get emailValidationSign() { return cy.xpath('//*[contains(@class, "ant-form-item-control")][.//*[@id="normal_login_email"]]//text()') }
     get passwordValidationSign() { return cy.xpath('//*[contains(@class, "ant-form-item-control")][.//*[@id="normal_login_password"]]//text()') }
 
+    get mainSign() { return cy.xpath('//h1[text()]') }
+
     open() {
         return super.open('/v5/user/login')
     }
