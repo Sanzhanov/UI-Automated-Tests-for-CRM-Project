@@ -1,7 +1,7 @@
 import ClientPage from "../pages/app/client.page";
-const faker = require('faker');
+import faker from "faker";
 
-describe('Client page', () => {
+describe('Client creation', () => {
     beforeEach(() => {
         cy.auth(Cypress.env('TOKEN'), Cypress.env('USER_ID'))
         ClientPage.open()
