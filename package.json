@@ -1,7 +1,7 @@
 {
   "name": "local-tests",
   "version": "1.0.0",
-  "description": "UI tests for localcoding.us",
+  "description": "UI automated tests for CRM Project ClientBase v5",
   "scripts": {
     "cy:open": "npx cypress open",
     "cy:run": "npx cypress run"
