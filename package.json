@@ -1,0 +1,23 @@
+{
+  "name": "local-tests",
+  "version": "1.0.0",
+  "description": "UI tests for localcoding.us",
+  "scripts": {
+    "cy:open": "npx cypress open",
+    "cy:run": "npx cypress run"
+  },
+  "author": "Alex Sanzhanov",
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/cli": "^7.19.3",
+    "@babel/core": "^7.20.2",
+    "@babel/plugin-transform-runtime": "^7.19.6",
+    "@babel/preset-env": "^7.20.2",
+    "@babel/register": "^7.18.9",
+    "cypress": "^11.1.0"
+  },
+  "dependencies": {
+    "cypress-xpath": "^2.0.1",
+    "faker": "^5.5.3"
+  }
+}
