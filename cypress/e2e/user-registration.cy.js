@@ -83,7 +83,7 @@ describe('Page content', () => {
         RegistrationPage.mainSign.should('be.visible').should('have.text', 'Create an account as a business owner')
     })
 
-    it('Prescription is visible', () => {
+    it('Prescription exists on the page', () => {
         RegistrationPage.prescription.should('be.visible').should('have.text', 'Already have an account? Just click Log in.')
     })
 

@@ -1,4 +1,4 @@
-describe('Main page for unauthorized user', () => {
+describe('Main page if user is unauthorized', () => {
 
 
 

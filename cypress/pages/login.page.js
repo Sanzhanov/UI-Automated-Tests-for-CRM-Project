@@ -10,6 +10,12 @@ class LoginPage extends BasePage {
 
     get mainSign() { return cy.xpath('//h1[text()]') }
 
+    get prescriptionAccount() { return cy.xpath('//p[text() = "Don’t have an account? "]') }
+    get prescriptionAccountLink() { return cy.xpath('//a[text() = "Create one"]') }
+    get prescriptionPassword() { return cy.xpath('//p[text() = "Forgot your password? "]')}
+    get prescriptionPasswordLink() { return cy.xpath('//a[text() = "Reset it"]')}
+
+
     open() {
         return super.open('/v5/user/login')
     }
