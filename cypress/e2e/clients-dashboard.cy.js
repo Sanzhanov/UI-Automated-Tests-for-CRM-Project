@@ -1,6 +1,8 @@
 import ClientPage from "../pages/app/client.page";
 import faker from "faker";
-import {fa} from "faker/lib/locales";
+import ModalWindow from "../elements/modal-window";
+import SearchForm from "../elements/search-form";
+import Dashboard from "../elements/dashboard";
 
 describe('Clients page', () => {
 
@@ -13,72 +15,114 @@ describe('Clients page', () => {
         it('Authorized user is able to open Clients Modal window', () => {
             ClientPage.buttonCreateClient.click()
 
-            ClientPage.modalWindow.creatingForm.should('be.visible')
-            ClientPage.modalWindow.mainSign.should('be.visible').should('have.text', 'Create Client')
+            ModalWindow.creatingForm.should('be.visible')
+            ModalWindow.mainSign.should('be.visible').should('have.text', 'Create Client')
 
-            ClientPage.modalWindow.markClose.click()
+            ModalWindow.markClose.click()
         })
     })
 
     describe('Search form', () => {
 
-        it('Search form exists on the page', () => {
-            ClientPage.searchForm.form.should('be.visible')
+        it('Search form exists on the page under navbar', () => {
+            SearchForm.form.should('be.visible')
         })
 
         it('Search field \'Name\' exists on the page and has corresponding placeholder', () => {
-            ClientPage.searchForm.searchField('Name').should('be.visible').should('have.attr', 'placeholder', 'Name')
+            SearchForm.searchField('Name').should('be.visible').should('have.attr', 'placeholder', 'Name')
         })
 
         it('Search field \'Email\' exists on the page and has corresponding placeholder', () => {
-            ClientPage.searchForm.searchField('Email').should('be.visible').should('have.attr', 'placeholder', 'Email')
+            SearchForm.searchField('Email').should('be.visible').should('have.attr', 'placeholder', 'Email')
         })
 
         it('Search field \'Phone\' exists on the page and has corresponding placeholder', () => {
-            ClientPage.searchForm.searchField('Phone').should('be.visible').should('have.attr', 'placeholder', 'Phone')
+            SearchForm.searchField('Phone').should('be.visible').should('have.attr', 'placeholder', 'Phone')
         })
 
         it('Clicking on reset button clears all search fields', () => {
-            ClientPage.searchForm.searchField('Name').type(faker.company.companyName())
-            ClientPage.searchForm.searchField('Email').type(faker.internet.email())
-            ClientPage.searchForm.searchField('Phone').type(faker.phone.phoneNumberFormat())
-            ClientPage.searchForm.buttonReset.click()
+            SearchForm.searchField('Name').type(faker.company.companyName())
+            SearchForm.searchField('Email').type(faker.internet.email())
+            SearchForm.searchField('Phone').type(faker.phone.phoneNumberFormat())
+            SearchForm.buttonReset.click()
 
-            ClientPage.searchForm.searchField('Name').should('be.empty')
-            ClientPage.searchForm.searchField('Email').should('be.empty')
-            ClientPage.searchForm.searchField('Phone').should('be.empty')
+            SearchForm.searchField('Name').should('be.empty')
+            SearchForm.searchField('Email').should('be.empty')
+            SearchForm.searchField('Phone').should('be.empty')
         })
 
-        it.only('Search by Name occurs automatically as user type characters in the field', () => {
-            const name = faker.company.companyName()
-            const phone = faker.phone.phoneNumberFormat()
+        it('Search by Name works correctly', () => {
+            const partOfName = 'LLC'
 
-            ClientPage.openModalWindow()
-            ClientPage.createClient(name, phone)
+            SearchForm.searchField('Name').type(partOfName)
+                .then(() => {
+                    cy.wait(1000)
 
-            ClientPage.searchForm.searchField('Name').type(name)
-            cy.wait(1000)
-            expect(cy.get('tbody.ant-table-tbody').find('a[href]').eq(0)).to.eq.name
+                    Dashboard.tableContent
+                        .then((body) => {
+                            if (body.find('a[href]').length > 0) {
+                                Dashboard.tableContent.find('a[href]').invoke('text').then((text) => {
+                                    expect(text.toLowerCase()).to.include(partOfName.toLowerCase())
+                                })
+                            } else cy.log('Initial part of name not found')
+                        })
+                })
+            SearchForm.buttonReset.click({timeout: 1000})
         })
 
-        it('The page reloads automatically as user type characters in the field', () => {
+        it('Search by Email works correctly', () => {
+            const partOfEmail = '@gmail'
+
+            SearchForm.searchField('Email').type(partOfEmail)
+                .then(() => {
+                    cy.wait(1000)
+
+                    Dashboard.tableContent
+                        .then((body) => {
+                            if (body.find('td').length > 0) {
+                                Dashboard.tableContent.find('td').invoke('text').then((text) => {
+                                    text !== 'No Data' ? expect(text).to.include(partOfEmail) : cy.log('Initial part of email not found')
+                                })
+                            }
+                        })
+                })
+            SearchForm.buttonReset.click({timeout: 1000})
+        })
+
+        it('Search by Phone works correctly', () => {
+            const partOfPhone = '54'
+
+            SearchForm.searchField('Phone').type(partOfPhone)
+                .then(() => {
+                    cy.wait(1000)
+
+                    Dashboard.tableContent
+                        .then((body) => {
+                            if (body.find('td').length > 0) {
+                                Dashboard.tableContent.find('td').invoke('text').then((text) => {
+                                    text !== 'No Data' ? expect(text).to.include(partOfPhone) : cy.log('Initial part of phone not found')
+                                })
+                            }
+                        })
+                })
+            SearchForm.buttonReset.click({timeout: 1000})
+        })
+
+        it.only('The page reloads automatically as user type characters in the field', () => {
             const name = faker.company.companyName()
             let namePart = ''
 
             for (let i = 0; i < name.length; i++) {
-                ClientPage.searchForm.searchField('Name').type(name[i])
+                SearchForm.searchField('Name').type(name[i])
                 cy.wait(1000)
 
                 if (name[i] === ' ') namePart += '+'
+                else if (name[i] === ',') namePart += '%2C'
                 else namePart += name[i]
 
                 cy.url().should('include', `name=${namePart}`)
             }
-            ClientPage.searchForm.buttonReset.click()
+            SearchForm.buttonReset.click({timeout: 1000})
         })
-
-
     })
-
-
 })
