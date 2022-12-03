@@ -13,7 +13,7 @@ describe('Client creation', () => {
 
     describe('SMOKE', () => {
 
-        it.only('User is able to create a new client if only required fields are filled, new client is added on clients dashboard as the first element in the list', () => {
+        it('User is able to create a new client if only required fields are filled, new client is added on clients dashboard as the first element in the list', () => {
             const name = faker.company.companyName()
             const phone = faker.phone.phoneNumberFormat()
 
