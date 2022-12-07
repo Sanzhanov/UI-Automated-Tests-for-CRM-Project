@@ -4,7 +4,8 @@
   "description": "UI automated tests for CRM Project ClientBase v5",
   "scripts": {
     "cy:open": "npx cypress open",
-    "cy:run": "npx cypress run"
+    "cy:run": "npx cypress run",
+    "cy:run:ci": "npx cypress run --record"
   },
   "author": "Alex Sanzhanov",
   "license": "ISC",
@@ -14,7 +15,7 @@
     "@babel/plugin-transform-runtime": "^7.19.6",
     "@babel/preset-env": "^7.20.2",
     "@babel/register": "^7.18.9",
-    "cypress": "^11.1.0"
+    "cypress": "^12.0.0"
   },
   "dependencies": {
     "cypress-xpath": "^2.0.1",
