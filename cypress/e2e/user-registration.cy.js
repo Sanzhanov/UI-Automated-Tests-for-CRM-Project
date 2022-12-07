@@ -1,17 +1,18 @@
 import RegistrationPage from "../pages/registration.page";
-import faker from "faker";
+import { testUserValid } from "../fixtures/users"
+import { testUserInvalid } from "../fixtures/users"
 import OnboardingPage from "../pages/onboarding.page";
 import LoginPage from "../pages/login.page";
 
 describe('SMOKE', () => {
+    const companyName = testUserValid.companyName
+    const firstName = testUserValid.firstName
+    const lastName = testUserValid.lastName
+    const email = testUserValid.email
+    const password = testUserValid.password
+
     describe('New user registration with valid credentials', () => {
         before(() => {
-            const companyName = faker.company.companyName()
-            const firstName = faker.name.firstName()
-            const lastName = faker.name.lastName()
-            const email = faker.internet.email()
-            const password = faker.internet.password()
-
             RegistrationPage.open()
             RegistrationPage.userRegister(companyName, firstName, lastName, email, password)
         })
@@ -24,12 +25,6 @@ describe('SMOKE', () => {
 
     describe('User registration with already registered Email', () => {
         before(() => {
-            const companyName = faker.company.companyName()
-            const firstName = faker.name.firstName()
-            const lastName = faker.name.lastName()
-            const email = Cypress.env('EMAIL')
-            const password = faker.internet.password()
-
             RegistrationPage.open()
             RegistrationPage.userRegister(companyName, firstName, lastName, email, password)
         })
@@ -44,34 +39,34 @@ describe('SMOKE', () => {
     })
 
     describe('User registration with invalid credentials', () => {
-        before(() => {
-            const companyName = faker.company.companyName()
-            const firstName = faker.name.firstName()
-            const lastName = faker.name.lastName()
-            const email = faker.internet.email()
-            const password = faker.internet.password()
+        beforeEach(() => {
+            const companyName = testUserInvalid.companyName
+            const firstName = testUserInvalid.firstName
+            const lastName = testUserInvalid.lastName
+            const email = testUserInvalid.email
+            const password = testUserInvalid.password
 
             RegistrationPage.open()
             RegistrationPage.fieldCompanyName.type(companyName)
             RegistrationPage.fieldFirstName.type(firstName)
             RegistrationPage.fieldLastName.type(lastName)
-            RegistrationPage.fieldEmail.type(password)
-            RegistrationPage.fieldPassword.type(email)
-        })
-
-        it('Register button is disabled', () => {
-            RegistrationPage.buttonRegister.should('be.disabled')
+            RegistrationPage.fieldEmail.type(email)
+            RegistrationPage.fieldPassword.type(password)
+            cy.wait(500)
         })
 
         it('Error sign under email field appears', () => {
             RegistrationPage.emailValidationSign.should('be.visible').should('have.text', 'Email is not valid email')
         })
-    })
 
+        it('Register button is disabled', () => {
+            RegistrationPage.buttonRegister.should('be.disabled')
+        })
+    })
 })
 
 describe('Page content', () => {
-    before(() => {
+    beforeEach(() => {
         RegistrationPage.open()
     })
 

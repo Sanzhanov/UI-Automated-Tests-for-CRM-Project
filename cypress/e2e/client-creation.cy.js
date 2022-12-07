@@ -1,5 +1,5 @@
 import ClientPage from "../pages/app/client.page";
-import faker from "faker";
+import { testClientValid } from '../fixtures/clients'
 import ModalWindow from "../elements/modal-window";
 import Dashboard from "../elements/dashboard";
 
@@ -12,27 +12,26 @@ describe('Client creation', () => {
     })
 
     describe('SMOKE', () => {
+        const name = testClientValid.companyName
+        const phone = testClientValid.phone
+        const email = testClientValid.email
+        const description = testClientValid.description
 
         it('User is able to create a new client if only required fields are filled, new client is added on clients dashboard as the first element in the list', () => {
-            const name = faker.company.companyName()
-            const phone = faker.phone.phoneNumberFormat()
 
-            ModalWindow.create(name, phone)
+            ModalWindow.createClient(name, phone)
             cy.wait(1000)
 
             Dashboard.tableContent.find('a[href]').eq(0).invoke('text').then((text) => {
-                expect(text).to.eq(name)
+                expect(text).to.eq(name, '**Company name matches**')
             })
 
             Dashboard.tableContent.find('td').eq(1).invoke('text').then((text) => {
-                expect(text).to.eq(phone)
+                expect(text).to.eq(phone, '**Phone matches**')
             })
         })
 
         it('User isn\'t able to create a new client if required fields are empty', () => {
-            const name = faker.company.companyName()
-            const phone = faker.phone.phoneNumberFormat()
-
             ModalWindow.field("Full Name", "name").type(name).clear()
             ModalWindow.field("Phone", "phone").type(phone).clear()
             ModalWindow.buttonSubmit.click()
@@ -40,6 +39,28 @@ describe('Client creation', () => {
             ModalWindow.fieldValidationSign('Full Name', 'Required').should('be.visible')
             ModalWindow.fieldValidationSign('Phone', 'Required').should('be.visible')
             ModalWindow.creatingForm.should('be.visible')
+        })
+
+        it('Client creation if all fields are filled', () => {
+
+            ModalWindow.createClient2(name, phone, email, description)
+            cy.wait(1000)
+
+            Dashboard.tableContent.find('td').eq(0).invoke('text').then((text) => {
+                expect(text).to.eq(name, '**Company name matches**')
+            })
+
+            Dashboard.tableContent.find('td').eq(1).invoke('text').then((text) => {
+                expect(text).to.eq(phone, '**Phone matches**')
+            })
+
+            Dashboard.tableContent.find('td').eq(2).invoke('text').then((text) => {
+                expect(text).to.eq(email, '**Email matches**')
+            })
+
+            // Dashboard.tableContent.find('td').eq(7).invoke('text').then((text) => {
+            //     expect(text).to.eq(description)
+            // })
         })
     })
 

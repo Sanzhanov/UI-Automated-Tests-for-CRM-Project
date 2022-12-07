@@ -17,6 +17,7 @@
 import './commands'
 import 'cypress-xpath'
 import './global'
+cy.faker = require('faker')
 
 // Alternatively you can use CommonJS syntax:
 // require('./commands')

@@ -13,7 +13,7 @@ class RegistrationPage extends BasePage {
 
     get toastError() { return cy.xpath('//div[text() = "User with this e-mail exists"]')}
 
-    get emailValidationSign() { return cy.xpath('//div[text() = "Email is not valid email"]') }
+    get emailValidationSign() { return cy.xpath('//*[text() = "Email is not valid email"]') }
 
     get prescription() { return cy.xpath('//p[text() = "Already have an account? Just click "]') }
     get prescriptionLink() { return cy.xpath('//a[text() = "Log in"]')}
