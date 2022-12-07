@@ -10,9 +10,17 @@ class ModalWindow {
 
     field(text, id) { return cy.xpath(`//*[contains(@class, "ant-row")][.//text() = "${text}"]//*[@id = "${id}"]`) }
 
-    create(name, phone) {
+    createClient(name, phone) {
         this.field("Full Name", "name").type(name)
         this.field("Phone", "phone").type(phone)
+        this.buttonSubmit.click()
+    }
+
+    createClient2(name, phone, email, description) {
+        this.field("Full Name", "name").type(name)
+        this.field("Phone", "phone").type(phone)
+        this.field("Email", "email").type(email)
+        this.field("Description", "description").type(description)
         this.buttonSubmit.click()
     }
 
