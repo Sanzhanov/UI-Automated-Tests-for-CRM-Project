@@ -51,9 +51,9 @@ describe('Clients page', () => {
 
             cy.get('@companyName').then((companyName) => {
                 cy.get('@phone').then((phone) => {
-
+                    cy.intercept('GET', '/v5/client/*').as('clientCardUpload');
                     Dashboard.tableContent.find('a[href]').eq(0).click()
-                    cy.wait(500)
+                    cy.wait('@clientCardUpload')
                     ClientCardPage.clientName.invoke('text').as('clientName')
                     ClientCardPage.clientPhone.invoke('text').as('clientPhone')
 
@@ -110,15 +110,19 @@ describe('Clients page', () => {
             })
 
             it('Clicking on btn \'Ok\' in confirmation window deletes corresponding client', () => {
-                cy.wait(1000)
+                cy.intercept('POST', '/v5/client/search').as('dataLoading');
+                cy.wait('@dataLoading')
+
                 Dashboard.tableContent.find('td').eq(0).invoke('text').as('clientBefore')
                 cy.get('@clientBefore').then((clientBefore) => {
                     EllipsisMenu.ellipsis.trigger("mouseover")
                     EllipsisMenu.buttonDelete.click()
-                    ConfirmationWindow.buttonOk.click()
-                    cy.wait(1000)
-                    Dashboard.tableContent.find('td').eq(0).invoke('text').as('clientAfter')
 
+                    cy.intercept('POST', '/v5/client/*').as('deleted');
+                    ConfirmationWindow.buttonOk.click()
+                    cy.wait('@deleted')
+
+                    Dashboard.tableContent.find('td').eq(0).invoke('text').as('clientAfter')
                     cy.get('@clientAfter').then((clientAfter) => {
                         expect(clientAfter).not.to.eq(clientBefore, '**Client names don\'t match**')
                     })
