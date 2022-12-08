@@ -46,8 +46,8 @@ describe('Dashboard search', () => {
                 Dashboard.tableContent
                     .then((body) => {
                         if (body.find('a[href]').length > 0) {
-                            Dashboard.tableContent.find('a[href]').invoke('text').then((text) => {
-                                expect(text.toLowerCase()).to.include(partOfName.toLowerCase())
+                            cy.wrap(body).find('a[href]').invoke('text').then((text) => {
+                                cy.wrap(text.toLowerCase()).should('include', partOfName.toLowerCase())
                             })
                         } else cy.log('**Name matches not found**')
                     })
@@ -65,7 +65,7 @@ describe('Dashboard search', () => {
                 Dashboard.tableContent
                     .then((body) => {
                         if (body.find('td').length > 0) {
-                            Dashboard.tableContent.find('td').invoke('text').then((text) => {
+                            cy.wrap(body).find('td').invoke('text').then((text) => {
                                 text !== 'No Data' ? expect(text).to.include(partOfEmail) : cy.log('**Email matches not found**')
                             })
                         }
@@ -84,7 +84,7 @@ describe('Dashboard search', () => {
                 Dashboard.tableContent
                     .then((body) => {
                         if (body.find('td').length > 0) {
-                            Dashboard.tableContent.find('td').invoke('text').then((text) => {
+                            cy.wrap(body).find('td').invoke('text').then((text) => {
                                 text !== 'No Data' ? expect(text).to.include(partOfPhone) : cy.log('**Phone matches not found**')
                             })
                         }

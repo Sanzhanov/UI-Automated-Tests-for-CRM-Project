@@ -36,8 +36,13 @@ describe('User profile', () => {
             UserProfilePage.creationDate.should('have.text', '17 November 2022 at 11:45 am')
         })
 
-        it.only('User profile table contains correct user email', () => {
+        it('User profile table contains correct user email', () => {
            UserProfilePage.userEmail.should('have.text', `${Cypress.env('EMAIL')}`)
         })
     })
+
+    // afterEach(() => {
+    //     console.log(this.currentTest)
+    //     this.currentTest.state === 'failed' ? cy.log('FAILED!!!') : cy.log('OK')
+    // })
 })
