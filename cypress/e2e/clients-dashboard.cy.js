@@ -46,23 +46,23 @@ describe('Clients page', () => {
         })
 
         it('Clicking on the client names opens the pages with their cards', () => {
-
             Dashboard.tableContent.find('a[href]').eq(0).invoke('text').as('companyName')
             Dashboard.tableContent.find('td').eq(1).invoke('text').as('phone')
-            Dashboard.tableContent.find('a[href]').eq(0).click()
-            cy.wait(500)
-            ClientCardPage.clientName.invoke('text').as('clientName')
-            ClientCardPage.clientPhone.invoke('text').as('clientPhone')
 
             cy.get('@companyName').then((companyName) => {
-                cy.get('@clientName').then((clientName) => {
-                    expect(clientName).to.eq(companyName, '**Client name verification successful**')
-                })
-            })
+                cy.get('@phone').then((phone) => {
 
-            cy.get('@phone').then((phone) => {
-                cy.get('@clientPhone').then((clientPhone) => {
-                    expect(clientPhone).to.eq(phone, '**Phone verification successful**')
+                    Dashboard.tableContent.find('a[href]').eq(0).click()
+                    cy.wait(500)
+                    ClientCardPage.clientName.invoke('text').as('clientName')
+                    ClientCardPage.clientPhone.invoke('text').as('clientPhone')
+
+                    cy.get('@clientName').then((clientName) => {
+                        expect(clientName).to.eq(companyName, '**Client name verification successful**')
+                    })
+                    cy.get('@clientPhone').then((clientPhone) => {
+                        expect(clientPhone).to.eq(phone, '**Phone verification successful**')
+                    })
                 })
             })
         })
@@ -101,7 +101,7 @@ describe('Clients page', () => {
                 ConfirmationWindow.window.should('be.visible')
             })
 
-            it('Clicking on button \'Cancel\' in additional confirmation window closes this window', () => {
+            it('Clicking on button \'Cancel\' in confirmation window closes this window', () => {
                 EllipsisMenu.ellipsis.trigger("mouseover")
                 EllipsisMenu.buttonDelete.click()
                 ConfirmationWindow.buttonCancel.click()
@@ -109,17 +109,16 @@ describe('Clients page', () => {
                 ConfirmationWindow.window.should('not.exist')
             })
 
-            it('Clicking on button \'Ok\' in additional confirmation window deletes corresponding client', () => {
-                Dashboard.tableContent.find('a[href]').eq(0).invoke('text').as('clientBefore')
-
-                EllipsisMenu.ellipsis.trigger("mouseover")
-                EllipsisMenu.buttonDelete.click()
-                ConfirmationWindow.buttonOk.click()
+            it('Clicking on btn \'Ok\' in confirmation window deletes corresponding client', () => {
                 cy.wait(1000)
-
-                Dashboard.tableContent.find('a[href]').eq(0).invoke('text').as('clientAfter')
-
+                Dashboard.tableContent.find('td').eq(0).invoke('text').as('clientBefore')
                 cy.get('@clientBefore').then((clientBefore) => {
+                    EllipsisMenu.ellipsis.trigger("mouseover")
+                    EllipsisMenu.buttonDelete.click()
+                    ConfirmationWindow.buttonOk.click()
+                    cy.wait(1000)
+                    Dashboard.tableContent.find('td').eq(0).invoke('text').as('clientAfter')
+
                     cy.get('@clientAfter').then((clientAfter) => {
                         expect(clientAfter).not.to.eq(clientBefore, '**Client names don\'t match**')
                     })
